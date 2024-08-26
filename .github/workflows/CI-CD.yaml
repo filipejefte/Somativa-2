@@ -10,6 +10,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
+
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -20,8 +30,27 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          echo "Waiting for PostgreSQL to start..."
+          sleep 15
+
+      - name: Test PostgreSQL Connection
+        run: |
+          sudo apt-get install -y postgresql-client
+          psql -h localhost -U user -d testdb -c "SELECT 1"
+        env:
+          PGPASSWORD: password
+
       - name: Build with Maven
         run: mvn clean install
 
       - name: Run Tests
         run: mvn test
+
+      - name: Upload Test Reports
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
