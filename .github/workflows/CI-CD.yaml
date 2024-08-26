@@ -1,6 +1,24 @@
+name: Java CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
 
     steps:
       - name: Check out code
@@ -17,3 +35,10 @@ jobs:
 
       - name: Run Tests
         run: mvn test
+
+      - name: Upload Test Reports
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
