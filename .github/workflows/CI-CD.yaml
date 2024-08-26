@@ -10,17 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:latest
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: testdb
-
-
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -30,9 +19,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
+          cache: maven
 
       - name: Build with Maven
         run: mvn clean install
-
-      - name: Run Tests
-        run: mvn test
