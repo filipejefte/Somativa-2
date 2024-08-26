@@ -27,10 +27,3 @@ jobs:
 
       - name: Run Tests
         run: mvn test
-
-      - name: Upload Test Reports
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: surefire-reports
-          path: target/surefire-reports
