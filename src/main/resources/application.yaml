@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url:  ${DATABASE_URL:jdbc:postgresql://localhost:5432/cf-authuser}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:root}
+    url:  jdbc:postgresql://localhost:5432/cf-authuser
+    username: postgres
+    password: root
   jpa:
     hibernate:
       ddl-auto: update
