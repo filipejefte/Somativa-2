@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -25,14 +24,10 @@ jobs:
       - name: Package application
         run: mvn package
 
-      - name: Build Docker image
-        run: docker build -t HUMBERTOPRAZERES/java-app:latest .
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          name: java-app
+          path: target/*.jar
 
-      - name: Push Docker image
-        run: docker push HUMBERTOPRAZERES/java-app:latest
+
