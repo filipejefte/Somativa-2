@@ -43,9 +43,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Create Pull Request from develop to main
-        run: |
-          gh pr create --base main --head develop --title "Auto PR from develop to main" --body "This PR is automatically created after a successful CI/CD pipeline."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_USER: ${{ github.actor }}
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          base: main
+          head: develop
+          title: "Merge develop into main"
+          body: "This is an automated pull request created because develop was updated."
+          draft: false
+          delete-branch: false
