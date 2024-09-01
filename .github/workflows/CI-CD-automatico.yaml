@@ -40,9 +40,6 @@ jobs:
     if: success()
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Check out the repository
         uses: actions/checkout@v3
 
