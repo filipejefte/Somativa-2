@@ -51,6 +51,6 @@ jobs:
           base: develop
           title: "Merge develop into main"
           body: "This is an automated pull request created because develop was updated."
-          draft: false
+          draft: true
           delete-branch: false
 
