@@ -6,7 +6,7 @@ on:
       - develop
 
 jobs:
-  ci_cd:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,15 +25,17 @@ jobs:
       - name: Run tests
         run: mvn test
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+      - name: Package application
+        run: mvn package
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/java-app:latest
+          name: java-app
+          path: target/*.jar
 
   create_pr:
-    needs: ci_cd
+    needs: build
     runs-on: ubuntu-latest
     if: success()
 
