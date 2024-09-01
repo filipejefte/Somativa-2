@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deliver:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -29,13 +29,16 @@ jobs:
         with:
           name: java-app
           path: target/*.jar
+
   deploy:
     runs-on: ubuntu-latest
-    needs: deliver
+    needs: build
     steps:
-      - uses: actions/download-artifact@v2
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
         with:
           name: java-app
-      - name: Display structure of dowloaded
-        rub: ls -R
 
