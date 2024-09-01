@@ -29,14 +29,13 @@ jobs:
         with:
           name: java-app
           path: target/*.jar
-
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs: deliver
-#    steps:
-#      - uses: action/dowload-artifact@v2
-#        with:
-#          name: java-app
-#      - name: Display structure of dowloaded
-#        rub: ls -R
+  deploy:
+    runs-on: ubuntu-latest
+    needs: deliver
+    steps:
+      - uses: actions/dowload-artifact@v2
+        with:
+          name: java-app
+      - name: Display structure of dowloaded
+        rub: ls -R
 
