@@ -64,10 +64,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send notification to Discord
-        run: |
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d '{"content": "A new PR has been opened to **${{ github.event.pull_request.base.ref }}** by **${{ github.event.pull_request.user.login }}**. PR title: **${{ github.event.pull_request.title }}**."}' \
-            ${DISCORD_WEBHOOK_URL}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -H "Content-Type: application/json" \
+            -d '{
+                  "embeds": [{
+                    "title": "Novo Pull Request Aberto",
+                    "color": 3066993,
+                    "fields": [
+                      {
+                        "name": "Título",
+                        "value": "'"${{ github.event.pull_request.title }}"'",
+                        "inline": false
+                      },
+                      {
+                        "name": "Autor",
+                        "value": "@'"${{ github.event.pull_request.user.login }}"'",
+                        "inline": true
+                      },
+                      {
+                        "name": "Link",
+                        "value": "[Abrir PR]('"${{ github.event.pull_request.html_url }}"')",
+                        "inline": true
+                      }
+                    ],
+                    "footer": {
+                      "text": "GitHub Actions",
+                      "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                    },
+                    "timestamp": "'"${{ github.event.pull_request.created_at }}"'"
+                  }]
+                }' \
+            $DISCORD_WEBHOOK_URL
+#    steps:
+#      - name: Send notification to Discord
+#        run: |
+#          curl -H "Content-Type: application/json" \
+#            -X POST \
+#            -d '{"content": "A new PR has been opened to **${{ github.event.pull_request.base.ref }}** by **${{ github.event.pull_request.user.login }}**. PR title: **${{ github.event.pull_request.title }}**."}' \
+#            ${DISCORD_WEBHOOK_URL}
+#        env:
+#          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
