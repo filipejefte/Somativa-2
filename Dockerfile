@@ -5,6 +5,7 @@ COPY pom.xml /app
 
 WORKDIR /app
 RUN mvn clean install
+#RUN mvn clean package -DskipTests  # Ignorar os testes durante a construção
 
 FROM openjdk:11-jre-slim
 
