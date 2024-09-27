@@ -67,10 +67,10 @@ jobs:
     steps:
       - name: Send notification to Discord
         run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
-          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
-          PR_URL="${{ github.event.pull_request.html_url }}"
-          BRANCH="${{ github.event.pull_request.base.ref }}"
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "PR Author: ${{ github.event.pull_request.user.login }}"
+          echo "PR URL: ${{ github.event.pull_request.html_url }}"
+          echo "Branch: ${{ github.event.pull_request.base.ref }}"
           
           curl -H "Content-Type: application/json" \
             -X POST \
