@@ -48,21 +48,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>junit</groupId>-->
-<!--			<artifactId>junit</artifactId>-->
-<!--			<version>4.13.2</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
+
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>test</id>
-			<properties>
-				<spring.profiles.active>test</spring.profiles.active>
-			</properties>
-		</profile>
-	</profiles>
+<!--	<profiles>-->
+<!--		<profile>-->
+<!--			<id>test</id>-->
+<!--			<properties>-->
+<!--				<spring.profiles.active>test</spring.profiles.active>-->
+<!--			</properties>-->
+<!--		</profile>-->
+<!--	</profiles>-->
 	<build>
 		<plugins>
 			<plugin>
