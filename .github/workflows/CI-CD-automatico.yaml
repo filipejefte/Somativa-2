@@ -52,26 +52,25 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create Pull Request
+        id: pr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -X POST \
+          response=$(curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d '{"title":"Merge develop into main","body":"This is an automated pull request created because develop was updated.","head":"develop","base":"main", "draft":true}' \
-            https://api.github.com/repos/${{ github.repository }}/pulls
+            -d '{"title":"Merge develop into main","body":"This is an automated pull request created because develop was updated.","head":"develop","base":"main"}' \
+            https://api.github.com/repos/${{ github.repository }}/pulls)
+          
+          echo "response=$response" >> $GITHUB_ENV
 
-  notify_discord:
-    needs: create_pr
-    runs-on: ubuntu-latest
-    steps:
       - name: Send notification to Discord
         run: |
-          echo "PR Title: ${{ github.event.pull_request.title }}"
-          echo "PR Author: ${{ github.event.pull_request.user.login }}"
-          echo "PR URL: ${{ github.event.pull_request.html_url }}"
-          echo "Branch: ${{ github.event.pull_request.base.ref }}"
-          
+          PR_TITLE=$(echo "${{ env.response }}" | jq -r .title)
+          PR_AUTHOR=$(echo "${{ env.response }}" | jq -r .user.login)
+          PR_URL=$(echo "${{ env.response }}" | jq -r .html_url)
+          BRANCH=$(echo "${{ env.response }}" | jq -r .base.ref)
+
           curl -H "Content-Type: application/json" \
             -X POST \
             -d "{\"content\": \"🚀 **Novo Pull Request para ${BRANCH}**\n👤 **Autor:** ${PR_AUTHOR}\n📝 **Título:** ${PR_TITLE}\n🔗 **Link:** ${PR_URL}\"}" \
