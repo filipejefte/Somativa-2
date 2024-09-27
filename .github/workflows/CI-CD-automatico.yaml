@@ -1,4 +1,4 @@
-name: CI/CD and Auto PR
+name: CI/CD and Auto PR with Discord Notification
 
 on:
   push:
@@ -41,7 +41,7 @@ jobs:
           name: java-app
 
   create_pr:
-    needs: build
+    needs: deploy
     runs-on: ubuntu-latest
     if: success()
 
@@ -59,3 +59,15 @@ jobs:
             -d '{"title":"Merge develop into main","body":"This is an automated pull request created because develop was updated.","head":"develop","base":"main","draft":true}' \
             https://api.github.com/repos/${{ github.repository }}/pulls
 
+  notify_discord:
+    needs: create_pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification to Discord
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "A new PR has been opened to **${{ github.event.pull_request.base.ref }}** by **${{ github.event.pull_request.user.login }}**. PR title: **${{ github.event.pull_request.title }}**."}' \
+            ${DISCORD_WEBHOOK_URL}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
