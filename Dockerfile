@@ -4,8 +4,9 @@ COPY src /app/src
 COPY pom.xml /app
 
 WORKDIR /app
-#RUN mvn clean install
-RUN mvn clean install -DskipTests  # Ignorar os testes durante a construção
+
+RUN mvn clean install -Dspring.profiles.active=test
+#RUN mvn clean install -DskipTests  # Ignorar os testes durante a construção
 
 FROM openjdk:11-jre-slim
 
