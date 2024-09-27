@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up JDK
         uses: actions/setup-java@v2
@@ -35,7 +35,7 @@ jobs:
     needs: build
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -48,7 +48,7 @@ jobs:
     if: success()
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create Pull Request
         env:
@@ -59,3 +59,19 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -d '{"title":"Merge develop into main","body":"This is an automated pull request created because develop was updated.","head":"develop","base":"main"}' \
             https://api.github.com/repos/${{ github.repository }}/pulls
+
+  notify_discord:
+    needs: create_pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification to Discord
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          BRANCH="${{ github.event.pull_request.base.ref }}"
+          
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"🚀 **Novo Pull Request para ${BRANCH}**\n👤 **Autor:** ${PR_AUTHOR}\n📝 **Título:** ${PR_TITLE}\n🔗 **Link:** ${PR_URL}\"}" \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
