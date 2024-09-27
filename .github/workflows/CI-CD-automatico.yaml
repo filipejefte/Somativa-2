@@ -65,6 +65,11 @@ jobs:
     steps:
       - name: Send notification to Discord
         run: |
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "PR Author: ${{ github.event.pull_request.user.login }}"
+          echo "PR URL: ${{ github.event.pull_request.html_url }}"
+          echo "Branch: ${{ github.event.pull_request.base.ref }}"
+          
           PR_TITLE="${{ github.event.pull_request.title }}"
           PR_AUTHOR="${{ github.event.pull_request.user.login }}"
           PR_URL="${{ github.event.pull_request.html_url }}"
@@ -74,5 +79,3 @@ jobs:
             -X POST \
             -d "{\"content\": \"🚀 **Novo Pull Request para ${BRANCH}**\n👤 **Autor:** ${PR_AUTHOR}\n📝 **Título:** ${PR_TITLE}\n🔗 **Link:** ${PR_URL}\"}" \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
