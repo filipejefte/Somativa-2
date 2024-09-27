@@ -4,16 +4,13 @@ on:
   push:
     branches:
       - develop
-#  pull_request:
-#    types: [ opened, reopened, synchronize ]
-#    branches:
-#      - main
-#      - develop
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -49,33 +46,16 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     if: success()
-
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
 
-      - name: Create Pull Request as Draft
+      - name: Create Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d '{"title":"Merge develop into main","body":"This is an automated pull request created because develop was updated.","head":"develop","base":"main","draft":true}' \
+            -d '{"title":"Merge develop into main","body":"This is an automated pull request created because develop was updated.","head":"develop","base":"main"}' \
             https://api.github.com/repos/${{ github.repository }}/pulls
-
-#  notify_discord:
-#    needs: create_pr
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Send notification to Discord
-#        run: |
-#          PR_TITLE="${{ github.event.pull_request.title }}"
-#          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
-#          PR_URL="${{ github.event.pull_request.html_url }}"
-#          BRANCH="${{ github.event.pull_request.base.ref }}"
-#
-#          curl -H "Content-Type: application/json" \
-#            -X POST \
-#            -d "{\"content\": \"🚀 **Novo Pull Request para ${BRANCH}**\n👤 **Autor:** ${PR_AUTHOR}\n📝 **Título:** ${PR_TITLE}\n🔗 **Link:** ${PR_URL}\"}" \
-#            ${{ secrets.DISCORD_WEBHOOK_URL }}
