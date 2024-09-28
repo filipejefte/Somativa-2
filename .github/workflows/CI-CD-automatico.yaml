@@ -32,6 +32,18 @@ jobs:
           name: java-app
           path: target/*.jar
 
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Run Tests
+        run: mvn test -Dspring.profiles.active=test
+
+      - name: Check test coverage
+        run: mvn jacoco:report
+
   deploy:
     runs-on: ubuntu-latest
     needs: build

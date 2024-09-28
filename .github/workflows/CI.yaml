@@ -20,3 +20,15 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install -Dspring.profiles.active=test
+
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Run Tests
+        run: mvn test -Dspring.profiles.active=test
+
+      - name: Check test coverage
+        run: mvn jacoco:report
