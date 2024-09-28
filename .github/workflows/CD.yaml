@@ -31,8 +31,11 @@ jobs:
           path: target/*.jar
 
   testes:
-    - runs-on: ubuntu-latest
-      steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
       - name: Run Tests
         run: mvn test -Dspring.profiles.active=test
 

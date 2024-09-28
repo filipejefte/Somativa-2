@@ -22,10 +22,13 @@ jobs:
         run: mvn clean install -Dspring.profiles.active=test
 
   testes:
-    - runs-on: ubuntu-latest
-      steps:
-        - name: Run Tests
-          run: mvn test -Dspring.profiles.active=test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
 
-        - name: Check test coverage
-          run: mvn jacoco:report
+      - name: Run Tests
+        run: mvn test -Dspring.profiles.active=test
+
+      - name: Check test coverage
+        run: mvn jacoco:report
