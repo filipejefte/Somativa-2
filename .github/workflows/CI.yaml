@@ -23,3 +23,6 @@ jobs:
 
       - name: Run Tests
         run: mvn test -Dspring.profiles.active=test
+
+      - name: Check test coverage
+        run: mvn jacoco:report
