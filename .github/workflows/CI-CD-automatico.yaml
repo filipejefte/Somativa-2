@@ -33,11 +33,13 @@ jobs:
           path: target/*.jar
 
   testes:
-    - name: Run Tests
-      run: mvn test -Dspring.profiles.active=test
+    - runs-on: ubuntu-latest
+      steps:
+        - name: Run Tests
+          run: mvn test -Dspring.profiles.active=test
 
-    - name: Check test coverage
-      run: mvn jacoco:report
+        - name: Check test coverage
+          run: mvn jacoco:report
 
   deploy:
     runs-on: ubuntu-latest
